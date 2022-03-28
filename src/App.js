@@ -3,61 +3,32 @@ import "./App.css";
 import { useEffect, useState } from "react";
 // import writers from "./writers";
 import ProfileCard from "./ProfileCard";
+import ProfileForm from "./ProfileForm";
 
 function App() {
-  const [data, setData] = useState({
-    writers: [],
-    loading: false,
-  });
+  const [allProfile, setAllprofile] = useState([
+    {
+      firstName: "Hannah",
+      lastName: "Montana",
+      email: "hannah.montana@email.com",
+      phone: "+223 024 455 000",
+    },
+  ]);
 
-  const handleClick = () => {
-    setData((prevData) => ({
-      ...prevData,
-      loading: true,
-    }));
-
-    setTimeout(() => {
-      const getWriters = async () => {
-        const response = await fetch("/writers.json");
-        const data = await response.json();
-        setData({
-          writers: data,
-          loading: false,
-        });
-      };
-      getWriters();
-    }, 2000);
+  const submit = (profile) => {
+    const arr = allProfile;
+    arr.push(profile);
+    setAllprofile(arr);
   };
-
-  if (data.loading) {
-    return (
-      <div>
-        <h1>Writers Profile</h1>
-        <div className="container">
-          <div className="card action">
-            <p className="infoText"> Loading... </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div>
-      <h1>Writers Profile</h1>
+      <h1>Writer Profiles</h1>
       <div className="container">
-        {data.writers.length === 0 ? (
-          <div className="card action">
-            <p className="infoText"> Oops...no writer profile foun</p>
-            <button className="=actionBtn" onClick={handleClick}>
-              Get Writers
-            </button>
-          </div>
-        ) : (
-          data.writer.map((writer) => (
-            <ProfileCard key={writer.id} writer={writer} />
-          ))
-        )}
+        <ProfileForm submit={submit} />
+        {allProfile.map((writer) => (
+          <ProfileCard key={writer.id} writer={writer} />
+        ))}
       </div>
     </div>
   );
